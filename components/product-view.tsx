@@ -15,7 +15,8 @@ import {
   Package,
   Eye,
   Heart,
-  Share2
+  Share2,
+  Star as StarIcon
 } from "lucide-react";
 import { VerificadorResponse, AmazonResponse, analyze, AnalysisResponse } from "@/lib/api";
 import { PriceChart } from "./price-chart";
@@ -54,20 +55,29 @@ export function ProductView({ verificadorData, amazonData }: ProductViewProps) {
 
   const getPriceStats = () => {
     if (!verificadorData.has_serie_historica || verificadorData.serie_historica.length === 0) {
-      // Si no hay histórico, usar el precio de Amazon si está disponible, sino el precio destacado
-      let currentPrice;
+      // Si no hay histórico, usar precios destacados del verificador
+      let currentPrice = 0;
       if (amazonData?.product?.price) {
         currentPrice = amazonData.product.price;
-      } else {
+      } else if (verificadorData.precios_destacados.length > 0) {
         const precioDestacado = verificadorData.precios_destacados[0]?.precio;
-        currentPrice = precioDestacado ? parseFloat(precioDestacado.replace(/[€,\s]/g, '').replace(',', '.')) : 0;
+        currentPrice = precioDestacado ? parseFloat(precioDestacado.replace(/[€,\s]/g, '').replace('.', '').replace(',', '.')) : 0;
       }
+      
+      // Para productos sin histórico, calcular estadísticas básicas de precios destacados
+      const precios = verificadorData.precios_destacados
+        .map(p => parseFloat(p.precio.replace(/[€,\s]/g, '').replace('.', '').replace(',', '.')))
+        .filter(p => !isNaN(p));
+      
+      const minPrice = precios.length > 0 ? Math.min(...precios) : currentPrice;
+      const maxPrice = precios.length > 0 ? Math.max(...precios) : currentPrice;
+      const avgPrice = precios.length > 0 ? precios.reduce((a, b) => a + b, 0) / precios.length : currentPrice;
       
       return {
         current: currentPrice,
-        min: currentPrice,
-        max: currentPrice,
-        avg: currentPrice,
+        min: minPrice,
+        max: maxPrice,
+        avg: avgPrice,
         lastDate: verificadorData.precios_destacados[0]?.fecha || new Date().toISOString()
       };
     }
@@ -251,31 +261,14 @@ export function ProductView({ verificadorData, amazonData }: ProductViewProps) {
             <Button
               onClick={handleAnalyze}
               disabled={isAnalyzing}
-              variant={analysis ? "default" : "outline"}
+              variant="outline"
               className="w-full"
               size="lg"
             >
               <Brain className="mr-2 h-4 w-4 flex-shrink-0" />
-              {isAnalyzing ? "Analizando con IA..." : analysis ? "✓ Análisis Completado" : "Análisis con IA"}
+              {isAnalyzing ? "Analizando con IA..." : analysis ? "Ver Análisis IA" : "Análisis con IA"}
             </Button>
-
-            <div className="grid grid-cols-2 gap-2">
-              <Button variant="ghost" size="sm" className="flex-1">
-                <Heart className="mr-1 sm:mr-2 h-4 w-4 flex-shrink-0" />
-                <span className="hidden sm:inline">Favoritos</span>
-                <span className="sm:hidden">♥</span>
-              </Button>
-              <Button variant="ghost" size="sm" className="flex-1">
-                <Share2 className="mr-1 sm:mr-2 h-4 w-4 flex-shrink-0" />
-                <span className="hidden sm:inline">Compartir</span>
-                <span className="sm:hidden">↗</span>
-              </Button>
-            </div>
           </div>
-
-          {/* Información adicional de Amazon */}
-          {amazonData?.product && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 pt-4 border-t">
               {amazonData.product.rating && (
                 <div className="flex items-center gap-2">
                   <Star className="h-4 w-4 text-yellow-500" />

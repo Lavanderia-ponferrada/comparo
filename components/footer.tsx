@@ -34,7 +34,7 @@ const footerLinks = [
 
 const Footer = () => {
   return (
-    <footer className="dark:border-t mt-40 dark bg-background text-foreground">
+    <footer className="border-t mt-40 bg-white">
       <div className="max-w-screen-xl mx-auto">
         <div className="py-12 flex flex-col sm:flex-row items-start justify-between gap-x-8 gap-y-10 px-6 xl:px-0">
           <div>
@@ -101,10 +101,20 @@ const Footer = () => {
             </form>
           </div>
         </div>
+        
+        {/* Mensaje de afiliados */}
+        <div className="px-6 xl:px-0 pb-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-sm text-blue-800 text-center">
+              💡 <strong>Transparencia:</strong> Recibimos una pequeña comisión como afiliados cuando compras a través de nuestros enlaces, sin coste adicional para ti. Esto nos ayuda a mantener el servicio gratuito.
+            </p>
+          </div>
+        </div>
+        
         <Separator />
         <div className="py-8 flex flex-col-reverse sm:flex-row items-center justify-between gap-x-2 gap-y-5 px-6 xl:px-0">
           {/* Copyright */}
-          <span className="text-muted-foreground text-center sm:text-start">
+          <span className="text-gray-600 text-center sm:text-start">
             &copy; {new Date().getFullYear()}{" "}
             <Link href="/" target="_blank">
               Comparaelprecio
@@ -112,7 +122,7 @@ const Footer = () => {
             . Todos los derechos reservados.
           </span>
 
-          <div className="flex items-center gap-5 text-muted-foreground">
+          <div className="flex items-center gap-5 text-gray-600">
             <Link href="#" target="_blank">
               <TwitterIcon className="h-5 w-5" />
             </Link>

@@ -49,13 +49,13 @@ export function AIAnalysis({ analysis }: AIAnalysisProps) {
   const getRecommendationColor = () => {
     switch (data.recomendacion) {
       case "comprar":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-50 text-green-700 border-green-200";
       case "no_comprar":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-red-50 text-red-700 border-red-200";
       case "depende":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+        return "bg-yellow-50 text-yellow-700 border-yellow-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-gray-50 text-gray-700 border-gray-200";
     }
   };
 
@@ -108,19 +108,19 @@ export function AIAnalysis({ analysis }: AIAnalysisProps) {
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4 lg:gap-6">
             <div className="space-y-2 lg:space-y-3">
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-sm lg:text-base text-gray-600">Último precio:</span>
                 <span className="font-semibold text-sm lg:text-base">
                   {data.analisis_precio.precio_actual ? formatPrice(data.analisis_precio.precio_actual) : 'N/D'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-sm lg:text-base text-gray-600">Precio mínimo:</span>
                 <span className="font-semibold text-green-600 text-sm lg:text-base">
                   {data.analisis_precio.min_180d ? formatPrice(data.analisis_precio.min_180d) : 'N/D'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-sm lg:text-base text-gray-600">Precio promedio:</span>
                 <span className="font-semibold text-sm lg:text-base">
                   {data.analisis_precio.media_180d ? formatPrice(data.analisis_precio.media_180d) : 'N/D'}
